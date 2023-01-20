@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+// import ReactDOM from 'react-dom';
 import * as ReactDOMClient from 'react-dom/client';
 import './index.css';
 
@@ -50,6 +50,7 @@ class Game extends React.Component {
     this.state = {
       history: [{
         squares: Array(9).fill(null),
+        moveLocation: [null, null],
       }],
       xIsNext: true,
       stepNumber: 0,
@@ -67,6 +68,7 @@ class Game extends React.Component {
     this.setState({
       history: history.concat([{
         squares: squares,
+        moveLocation: [(i % 3) + 1, Math.ceil((i + 1) / 3)],
       }]),
       stepNumber: history.length,
       xIsNext: !this.state.xIsNext,
@@ -86,10 +88,13 @@ class Game extends React.Component {
     const winner = calculateWinner(current.squares);
 
     const moves = history.map((step, move) => {
-      const desc = move ? `Go to move ${move}` : `Go to game start`;
+      const desc = move ?
+        `Go to move ${move}` : `Go to game start`;
+      const moveLocation = move ? `(${history[move].moveLocation[0]},${history[move].moveLocation[1]})` : '';
       return (
         <li key={move}>
           <button onClick={() => this.jumpTo(move)}>{desc}</button>
+          <p>{moveLocation}</p>
         </li>
       );
     });
