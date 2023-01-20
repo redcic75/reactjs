@@ -50,6 +50,7 @@ class Game extends React.Component {
       }],
       xIsNext: true,
       stepNumber: 0,
+      chronologicalOrder: true,
     }
   }
 
@@ -87,6 +88,12 @@ class Game extends React.Component {
     });
   }
 
+  changeOrder() {
+    this.setState({
+      chronologicalOrder: !this.state.chronologicalOrder,
+    })
+  }
+
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
@@ -104,6 +111,8 @@ class Game extends React.Component {
       );
     });
 
+    if (!this.state.chronologicalOrder) moves.reverse();
+
     let status;
     if (winner) {
       status = `Winner: ${winner}`;
@@ -112,6 +121,9 @@ class Game extends React.Component {
     } else {
       status = `Next player: ${this.state.xIsNext ? 'X' : 'O'}`;
     }
+
+    let buttonValue = this.state.chronologicalOrder ? 'Switch to last move first' : 'Switch to first move first';
+
     return (
       <div className="game">
         <div className="game-board">
@@ -123,7 +135,10 @@ class Game extends React.Component {
         </div>
         <div className="game-info">
           <div>{status}</div>
-          <ol>{moves}</ol>
+          <ol reversed={!this.state.chronologicalOrder}>{moves}</ol>
+        </div>
+        <div>
+          <button onClick={() => this.changeOrder()}>{buttonValue}</button>
         </div>
       </div>
     );
